@@ -1,0 +1,20 @@
+theme: jekyll-theme-hacker
+title: sec👨‍💻fortress:~#
+description: Defensive By Offensive!.
+show_downloads: false
+show_repo: false
+
+safe: true
+
+plugins:
+  - jekyll-gist
+  - jekyll-coffeescript
+  - jekyll-seo-tag
+  - some-other-jekyll-plugin
+  - jekyll-twitter-plugin
+  
+gems:
+  - jekyll-sitemap
+
+whitelist:
+  - jekyll-sitemap
