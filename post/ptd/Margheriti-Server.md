@@ -1,4 +1,4 @@
-![[Pasted image 20240827192713.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg1.png)
 
 # Reconnaissance
 
@@ -57,53 +57,53 @@ HOP RTT       ADDRESS
 
 The nmap scan shows there's a webserver running on the target on port 80, navigating to it is a webpage that's powered by wordpress
 
-![[Pasted image 20240827154646.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg2.png)
 
-![[Pasted image 20240827154713.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg3.png)
 
 
 So i used `wpscan` to enumerate the site since as it was built using wordpress, and i discovered and uploads directory
 
-![[Pasted image 20240827155612.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg4.png)
 
 Navigating to the directory i found `FLAG22`
 
-![[Pasted image 20240827155646.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg5.png)
 
 I also found a user `eadmin`
 
-![[Pasted image 20240827160413.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg6.png)
 
 Which i tested the username on the login page to confirm its validity
 
-![[Pasted image 20240827160809.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg7.png)
 
 Doing some directory bruteforce attack, using dirsearch to see if I could find any exposed sensitive files & folders i found a zip file `backup.zip`
 
-![[Pasted image 20240827170209.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg8.png)
 
 Unziping the zip file i found `FLAG14`
 
-![[Pasted image 20240827170446.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg9.png)
 
 
 I also found a  wordpress config file which usually contain database username and password, which i found in the file
 
-![[Pasted image 20240827172444.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg10.png)
 
-![[Pasted image 20240827172522.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg11.png)
 
 Using the database username and password i was able to log in to the mysql mariadb database
 
-![[Pasted image 20240827172703.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg12.png)
 
 Showing the available databases and listing the tables in the database `wordpress` i found `FLAG32`
 
-![[Pasted image 20240827172909.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg13.png)
 
 Listing everything in the table `wp_users` i found user `eadmin` password hash
 
-![[Pasted image 20240827173054.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg14.png)
 
 Using hashcat to crack the file was unsuccessful 
 
@@ -113,30 +113,30 @@ I used the following mysql mariadb command to create a php webshell to a new fil
 SELECT "<?php system($_GET['cmd']); ?>" INTO OUTFILE '/var/www/html/cmd3.php';
 ```
 
-![[Pasted image 20240827180527.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg15.png)
 
 Using the `ls` command i was able to list the contents of the directory where i found and interesting file `WordPress-Account.txt`
 
-![[Pasted image 20240827180729.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg16.png)
 
 Cating out the contents of the `WordPress-Account.txt` i found user `eadmin` password 
 
-![[Pasted image 20240827180829.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg17.png)
 
 I used the credentials to login into the wordpress dashboard and i found `FLAG23`
 
-![[Pasted image 20240827181109.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg18.png)
 
 So to gain a shell i created a php reverse shell with python hosted it on my machine and used
 
-![[Pasted image 20240827192310.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg19.png)
 
-![[Pasted image 20240827192326.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg20.png)
 
 Then i navigated to the file and got a reverse shell\
 
-![[Pasted image 20240827192528.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg21.png)
 
 Navigating to the home directory i found a user directory `webmaster` changing to the directory i found the last flag `FLAG6`
 
-![[Pasted image 20240827192940.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/marg22.png)
