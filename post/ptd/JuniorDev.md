@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-sgawfawfa
 =======
 # Morty
 
 ***
 ## Difficulty = Medium
-![image](https://agent-skywalker.github.io/post/htb/images/htb.png)
+![image](https://agent-skywalker.github.io/post/ptd/images/badge.png)
 
 ***
 
