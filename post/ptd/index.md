@@ -15,4 +15,4 @@ PwnTillDawn Online Battlefield is wizlynx group's vision of the next-generation 
 
 - [[Jun. 16 2024]] [Juno ](https://agent-skywalker.github.io/post/ptd/Juno.html) `Bruteforcing, Decoding, Mobile Exploitation`
 - [[Jun. 25 2024]] [Junior Dev](https://agent-skywalker.github.io/post/ptd/JuniorDev.html) `Bruteforcing, Jenkins RCE, Pivoting, Python Command Injection`
-
+- [[Aug. 27 2024]] [Margheriti-Server](https://agent-skywalker.github.io/post/ptd/Margheriti-Server.html) `Bruteforcing, Wordpress RCE, mysql`
