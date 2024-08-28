@@ -12,3 +12,7 @@ title:  PwnTillDawn.
 <h4 class="menu-header" id="pwntilldawn">PwnTillDawn:</h4>
 PwnTillDawn Online Battlefield is wizlynx group's vision of the next-generation offensive security & Penetration testing lab but also capture-the-flag competition.<hr>
 <hr>
+
+
+- [[Jun. 25 2024]] [Junior Dev](https://agent-skywalker.github.io/post/ptd/JuniorDev.html) `Bruteforcing, Jenkins RCE, Pivoting, Python Command Injection`
+- [[Jun. 16 2024]] [Juno ](https://agent-skywalker.github.io/post/ptd/Juno.html) `Bruteforcing, Decoding, Mobile Exploitation`
