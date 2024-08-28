@@ -5,7 +5,7 @@ sgawfawfa
 
 ***
 ## Difficulty = Medium
-![image](https://github.com/agent-skywalker/agent-skywalker.github.io/post/ptd/images/badge.png)
+![image](https://agent-skywalker.github.io/post/htb/images/htb.png)
 
 ***
 
