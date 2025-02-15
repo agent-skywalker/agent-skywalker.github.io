@@ -154,7 +154,7 @@ we start a netcat listner `nc -nvlp 4444`
 
 then visited the following URL and got my shell!
 
-[dev](http://dev.devvortex.htb/templates/cassiopeia/error.php)
+[dev](https://dev.devvortex.htb/templates/cassiopeia/error.php)
 
 
 ![devvortex ](/assets/hackthebox/devvortex/devvortex16.png)
