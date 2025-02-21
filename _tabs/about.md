@@ -4,6 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
+![Skywalker](/assets/giphy.webp)
 
 Hey, I’m Agent Skywalker 🕵️‍♂️—a penetration tester focused on web 🌐, mobile 📱, and network 🔗 security. I’m all about OSINT 🔍 and sharing insights to help strengthen cybersecurity. Let’s learn and explore together 💻🚀.
 

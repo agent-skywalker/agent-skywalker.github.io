@@ -1,6 +1,6 @@
 ---
 title: Devvortex
-date: 2025-2-15 00:00:15 +0800
+date: 2024-4-27 00:00:15 +0800
 categories: [HackTheBox, HTB_Easy]
 tags: [joomla, mysql]     # TAG names should always be lowercase
 image: 

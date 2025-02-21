@@ -1,6 +1,6 @@
 ---
 title: Administrator
-date: 2025-2-15 00:00:12 +0800
+date: 2025-2-11 00:00:12 +0800
 categories: [HackTheBox, HTB_Meduim]
 tags: [active directory, kerberoasting, dcsync attack]     # TAG names should always be lowercase
 image: 
