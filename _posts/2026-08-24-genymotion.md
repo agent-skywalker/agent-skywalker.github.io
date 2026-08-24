@@ -1,6 +1,6 @@
 ---
 title: How to Root Android 14.0–15.0 on Genymotion and Proxy Traffic to Burp Suite
-date: 2025-2-04 03:05:12 +0800
+date: 2026-08-24 10:51:12 +0800
 categories: [Blog, Android]
 tags: [rooting, genymotion, android]     # TAG names should always be lowercase
 image: 
