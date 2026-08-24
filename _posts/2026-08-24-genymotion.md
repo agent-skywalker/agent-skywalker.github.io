@@ -1,5 +1,5 @@
 ---
-title: How to Root Android 12.1–15.0 and Proxy Traffic to Burp Suite
+title: How to Root Android 14.0–15.0 and Proxy Traffic to Burp Suite
 date: 2025-2-04 03:05:12 +0800
 categories: [Blog, Android]
 tags: [rooting, genymotion, android]     # TAG names should always be lowercase
